@@ -1,7 +1,4 @@
 <Solution>
-  <Folder Name="/Новая папка1/">
-    <File Path="docker-compose.yml" />
-  </Folder>
   <Project Path="InnoShop.csproj" />
   <Project Path="ProductService/ProductService.csproj" />
   <Project Path="UserService/UserService.csproj" />
