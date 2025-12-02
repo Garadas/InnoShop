@@ -1,6 +1,4 @@
-
 services:
-
   mysql:
     image: mysql:8.0.44
     container_name: mysql
@@ -8,45 +6,34 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: arturka1
       MYSQL_DATABASE: products_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - C:/work/InnoShop/init-db:/docker-entrypoint-initdb.d
-
-  userservice:
-    build: ./UserService
-    container_name: userservice
-    depends_on:
-      - mysql
-    environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-      ConnectionStrings__DefaultConnection: "Server=mysql;Port=3306;Database=users_db;User=root;Password=arturka1;SslMode=None;"
-      ProductService__Url: "http://productservice:5001"
-      Jwt__Secret: "SUPERMEGA_SECURE_256_BIT_SECRET"
-    ports:
-      - "5000:5000"
-    restart: always
-
-  productservice:
-    build: ./ProductService
-    container_name: productservice
-    depends_on:
-      - mysql
-    environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-      ConnectionStrings__DefaultConnection: "Server=mysql;Port=3306;Database=products_db;User=root;Password=arturka1;SslMode=None;"
-      Jwt__Secret: "SUPERMEGA_SECURE_256_BIT_SECRET"
-    ports:
-      - "5001:5001"
-    restart: always
+      - ./init-db:/docker-entrypoint-initdb.d
 
   adminer:
     image: adminer
     container_name: adminer
     restart: always
     ports:
-      - "8080:8080"
+      - 8080:8080
+
+  userservice:
+    build: ./UserService
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=mysql;Port=3306;Database=users_db;User=root;Password=arturka1;SslMode=None;"
+    depends_on:
+      - mysql
+
+  productservice:
+    build: ./ProductService
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=mysql;Port=3306;Database=products_db;User=root;Password=arturka1;SslMode=None;"
+    depends_on:
+      - mysql
 
 volumes:
   mysql_data:

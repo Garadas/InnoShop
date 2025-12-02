@@ -3,10 +3,10 @@ WORKDIR /app
 EXPOSE 5000
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-WORKDIR /src
+WORKDIR /app
 COPY . .
 RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet build
 
 FROM base AS final
 WORKDIR /app
